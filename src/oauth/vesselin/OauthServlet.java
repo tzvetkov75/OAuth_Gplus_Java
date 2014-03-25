@@ -1,6 +1,27 @@
 package oauth.vesselin;
 
+
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.extensions.jdo.auth.oauth2.JdoCredentialStore;
+import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Collections;
+
+import javax.jdo.JDOHelper;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -16,69 +37,57 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.http.GenericUrl;
 
-public class OauthServlet  extends AbstractAuthorizationCodeServlet {
+public class OauthServlet extends AbstractAuthorizationCodeServlet {
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ServletException {
+        PrintWriter out = response.getWriter();
 
-	  @Override
-	  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	      throws IOException {
-	    // do stuff
-	  }
+        // Make a request to list the the details of a parcitular map.
+        URL url = new URL("https://www.googleapis.com/mapsengine/v1/maps/YOUR_MAP_ID");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+        connection.setRequestProperty(
+            "Authorization", "Bearer " + getCredential().getAccessToken());
+        connection.connect();
 
-	  @Override
-	  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-	    GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-	    url.setRawPath("/oauth2callback");
-	    return url.build();
-	  }
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(connection.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+          out.println(line);
+        }
+    }
 
-	  @Override
-	  protected AuthorizationCodeFlow initializeFlow() throws IOException {
-	    return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
-	        "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
-	        Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
-	        new JdoCredentialStore(JDOHelper.getPersistenceManagerFactory("transactions-optional")))
-	        .build();
-	  }
+    @Override
+    protected String getRedirectUri(HttpServletRequest req)
+            throws ServletException, IOException {
+        GenericUrl url = new GenericUrl(req.getRequestURL().toString());
+        url.setRawPath("/HelloWorld/oauth2callback");
+        return url.build();
+    }
 
-	  @Override
-	  protected String getUserId(HttpServletRequest req) throws ServletException, IOException {
-	    // return user ID
-	  }
-	}
+    @Override
+    protected AuthorizationCodeFlow initializeFlow() throws IOException {
+        return new GoogleAuthorizationCodeFlow.Builder(
+                new NetHttpTransport(),
+                new JacksonFactory(),
+                "YOUR_CLIENT_ID",
+                "YOUR_CLIENT_SECRET",
+                Collections
+                        .singleton("https://www.googleapis.com/auth/mapsengine.readonly"))
+                .setCredentialStore(
+                        new JdoCredentialStore(
+                                JDOHelper
+                                        .getPersistenceManagerFactory("transactions-optional")))
+                .build();
+    }
 
-	public class CalendarServletCallbackSample extends AbstractAuthorizationCodeCallbackServlet {
-
-	  @Override
-	  protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
-	      throws ServletException, IOException {
-	    resp.sendRedirect("/");
-	  }
-
-	  @Override
-	  protected void onError(
-	      HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
-	      throws ServletException, IOException {
-	    // handle error
-	  }
-
-	  @Override
-	  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-	    GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-	    url.setRawPath("/oauth2callback");
-	    return url.build();
-	  }
-
-	  @Override
-	  protected AuthorizationCodeFlow initializeFlow() throws IOException {
-	    return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
-	        "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
-	        Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
-	        new JdoCredentialStore(JDOHelper.getPersistenceManagerFactory("transactions-optional")))
-	        .build();
-	  }
-
-	  @Override
-	  protected String getUserId(HttpServletRequest req) throws ServletException, IOException {
-	    // return user ID
-	  }
-	}
+    @Override
+    protected String getUserId(HttpServletRequest req) throws ServletException,
+            IOException {
+        // replace this with code to generate a unique ID for each visitor.
+        return "1234";
+    }
+}
