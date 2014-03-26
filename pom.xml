@@ -48,11 +48,10 @@
 			<version>1.17.0-rc</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.apiclient</groupId>
-			<artifactId>google-api-client-googleapis</artifactId>
-			<version>1.4.1-beta</version>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-oauth2</artifactId>
+			<version>v2-rev66-1.17.0-rc</version>
 		</dependency>
-
 	</dependencies>
 
 </project>

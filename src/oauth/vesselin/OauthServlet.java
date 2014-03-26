@@ -9,15 +9,16 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 
-import javax.jdo.JDOHelper;
 import javax.jdo.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -72,12 +73,11 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    	    	
-        return new AuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
-                "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
-                Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
-                new JdoCredentialStore(JDOHelper.getPersistenceManagerFactory("transactions-optional")))
-                .build();
+    	 
+        return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
+                "CLIENT ID", "CLIENT SECRET",
+                Arrays.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"))
+                ).build();
 
     }
 
