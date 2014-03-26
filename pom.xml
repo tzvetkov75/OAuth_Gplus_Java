@@ -48,7 +48,7 @@
 			<version>1.17.0-rc</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.api.client</groupId>
+			<groupId>com.google.apiclient</groupId>
 			<artifactId>google-api-client-googleapis</artifactId>
 			<version>1.4.1-beta</version>
 		</dependency>
