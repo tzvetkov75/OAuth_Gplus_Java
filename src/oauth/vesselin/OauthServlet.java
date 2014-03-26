@@ -1,14 +1,14 @@
 package oauth.vesselin;
 
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.extensions.jdo.auth.oauth2.JdoCredentialStore;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Collections;
 
 import javax.jdo.JDOHelper;
+import javax.jdo.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.http.GenericUrl;
@@ -70,18 +72,13 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws IOException {
-        return new GoogleAuthorizationCodeFlow.Builder(
-                new NetHttpTransport(),
-                new JacksonFactory(),
-                "YOUR_CLIENT_ID",
-                "YOUR_CLIENT_SECRET",
-                Collections
-                        .singleton("https://www.googleapis.com/auth/mapsengine.readonly"))
-                .setCredentialStore(
-                        new JdoCredentialStore(
-                                JDOHelper
-                                        .getPersistenceManagerFactory("transactions-optional")))
+    	    	
+        return new AuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
+                "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
+                Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
+                new JdoCredentialStore(JDOHelper.getPersistenceManagerFactory("transactions-optional")))
                 .build();
+
     }
 
     @Override
