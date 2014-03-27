@@ -9,4 +9,21 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <servlet-name>Oauth</servlet-name>
+    <servlet-class>oauth.vesselin.OauthServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Oauth</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>OauthCallback</servlet-name>
+    <servlet-class>oauth.vesselin.OauthServletCallback</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OauthCallback</servlet-name>
+    <url-pattern>/oauth2callback/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>

@@ -46,28 +46,28 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
             HttpServletResponse response) throws IOException, ServletException {
         PrintWriter out = response.getWriter();
 
-        // Make a request to list the the details of a parcitular map.
-        URL url = new URL("https://www.googleapis.com/mapsengine/v1/maps/YOUR_MAP_ID");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
-        connection.setRequestProperty(
-            "Authorization", "Bearer " + getCredential().getAccessToken());
-        connection.connect();
-
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(connection.getInputStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-          out.println(line);
-        }
+//        // Make a request to list the the details of a parcitular map.
+//        URL url = new URL("https://www.googleapis.com/mapsengine/v1/maps/YOUR_MAP_ID");
+//        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//        connection.setRequestMethod("GET");
+//        connection.setDoOutput(true);
+//        connection.setRequestProperty(
+//            "Authorization", "Bearer " + getCredential().getAccessToken());
+//        connection.connect();
+//
+//        BufferedReader reader = new BufferedReader(
+//            new InputStreamReader(connection.getInputStream()));
+//        String line;
+//        while ((line = reader.readLine()) != null) {
+//          out.println(line);
+//        }
     }
 
     @Override
     protected String getRedirectUri(HttpServletRequest req)
             throws ServletException, IOException {
         GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-        url.setRawPath("/HelloWorld/oauth2callback");
+        url.setRawPath("/TestOAuth/oauth2callback");
         return url.build();
     }
 
@@ -75,7 +75,7 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
     protected AuthorizationCodeFlow initializeFlow() throws IOException {
     	 
         return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(),
-                "CLIENT ID", "CLIENT SECRET",
+                "940835816268-ugtssahhnrps6nfjgr0ed0du4ic231ah.apps.googleusercontent.com", "jvbSnWivqd-Xg4uD5P7XFnax",
                 Arrays.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"))
                 ).build();
 
