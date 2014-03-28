@@ -45,7 +45,9 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
         PrintWriter out = response.getWriter();
-
+        out.println("test test");
+        response.sendRedirect("/asasasaaindex.html");
+        
 //        // Make a request to list the the details of a parcitular map.
 //        URL url = new URL("https://www.googleapis.com/mapsengine/v1/maps/YOUR_MAP_ID");
 //        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -61,13 +63,16 @@ public class OauthServlet extends AbstractAuthorizationCodeServlet {
 //        while ((line = reader.readLine()) != null) {
 //          out.println(line);
 //        }
+        
+        int a=1;
+        
     }
 
     @Override
     protected String getRedirectUri(HttpServletRequest req)
             throws ServletException, IOException {
         GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-        url.setRawPath("/TestOAuth/oauth2callback");
+        url.setRawPath("/TestOAuth2/oauth2callback");
         return url.build();
     }
 

@@ -45,7 +45,7 @@ public class OauthServletCallback extends AbstractAuthorizationCodeCallbackServl
 	  @Override
 	  protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
 	      throws ServletException, IOException {
-	    resp.sendRedirect("/");
+	    resp.sendRedirect("/TestOAuth2/content/mimi.xhtml");
 	  }
 
 	  @Override
@@ -58,7 +58,7 @@ public class OauthServletCallback extends AbstractAuthorizationCodeCallbackServl
 	  @Override
 	  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
 	    GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-	    url.setRawPath("/oauth2callback");
+	    url.setRawPath("/TestOAuth2/oauth2callback");
 	    return url.build();
 	  }
 
